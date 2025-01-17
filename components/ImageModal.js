@@ -1,4 +1,3 @@
-// src/components/ImageModal.js
 import React from 'react';
 import { Modal, View, Image, StyleSheet, Button } from 'react-native';
 

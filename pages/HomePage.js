@@ -1,41 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import { View, FlatList, StyleSheet, Text, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
 import { fetchImages } from '../database/database';
 import ImageCard from '../components/ImageCard';
-import ImageModal from '../components/ImageModal';
+import ImageModal from '../components/ImageModal'; // Import ImageModal component
 
 const HomePage = ({ navigation }) => {
   const [images, setImages] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchImages(setImages).catch(err => {
-      console.error('Error fetching images:', err);
-      setError(err);
-    });
+    const loadImages = async () => {
+      const fetchedImages = await fetchImages();
+      setImages(fetchedImages);
+    };
+
+    loadImages();
   }, []);
+
+  const handleImagePress = (image) => {
+    setSelectedImage(image);  // Set the selected image
+    setModalVisible(true);    // Show the modal
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);   // Close the modal
+    setSelectedImage(null);   // Clear the selected image
+  };
 
   return (
     <View style={styles.container}>
-      {error && <Text style={styles.errorText}>Error: {error.message}</Text>}
-      <FlatList
-        data={images}
-        renderItem={({ item }) => <ImageCard image={item} onPress={setSelectedImage} />}
-        keyExtractor={(item) => item.id.toString()}
-      />
-      {selectedImage && (
-        <ImageModal
-          visible={!!selectedImage}
-          image={selectedImage}
-          onClose={() => setSelectedImage(null)}
+      {/* Render image cards */}
+      {images.length === 0 ? (
+        <Text style={styles.noImagesText}>No images available</Text>
+      ) : (
+        <FlatList
+          data={images}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <ImageCard image={item} onPress={handleImagePress} />
+          )}
         />
       )}
-      <Button
-        title="Open Camera"
-        onPress={() => navigation.navigate('Camera')}
-        style={styles.cameraButton}
-      />
+
+      {/* Camera button */}
+      <View style={styles.cameraButton}>
+        <Button
+          title="Go to Camera"
+          onPress={() => navigation.navigate('CameraPage')}
+        />
+      </View>
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <ImageModal
+          visible={modalVisible}
+          image={selectedImage}
+          onClose={handleCloseModal}
+        />
+      )}
     </View>
   );
 };
@@ -43,15 +66,15 @@ const HomePage = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    padding: 20,
     backgroundColor: '#f8f8f8',
   },
-  cameraButton: {
-    marginTop: 10,
-  },
-  errorText: {
-    color: 'red',
+  noImagesText: {
     textAlign: 'center',
+    fontSize: 18,
+    marginVertical: 20,
+  },
+  cameraButton: {
     marginTop: 20,
   },
 });

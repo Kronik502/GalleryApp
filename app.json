@@ -6,20 +6,17 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "plugins": [
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "Allow GalleryApp to access your camera",
-          "microphonePermission": "Allow GalleryApp to access your microphone",
-          "recordAudioAndroid": true
-        }
-      ]
-    ],
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "We use your camera to take photos."
+        "NSCameraUsageDescription": "We use your camera to take photos.",
+        "NSMicrophoneUsageDescription": "We may use your microphone for audio capture."
       }
     },
     "android": {
@@ -32,6 +29,16 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow GalleryApp to access your camera",
+          "microphonePermission": "Allow GalleryApp to access your microphone",
+          "recordAudioAndroid": false
+        }
+      ]
+    ],
     "extra": {
       "eas": {
         "projectId": "your-project-id"

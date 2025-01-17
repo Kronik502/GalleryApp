@@ -1,4 +1,3 @@
-// src/components/ImageCard.js
 import React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
