@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import MapView, { Marker } from 'react-native-maps-super-cluster'; // Update if using an alternative library
+import MapView, { Marker } from 'react-native-maps';
 import { fetchImages } from '../database/database';
 
 const MapPage = () => {
@@ -8,12 +8,16 @@ const MapPage = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    try {
-      fetchImages(setImages);
-    } catch (err) {
-      console.error('Error fetching images:', err);
-      setError(err);
-    }
+    const fetchImagesAsync = async () => {
+      try {
+        await fetchImages(setImages);
+      } catch (err) {
+        console.error('Error fetching images:', err);
+        setError(err);
+      }
+    };
+
+    fetchImagesAsync();
   }, []);
 
   return (

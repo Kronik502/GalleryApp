@@ -1,31 +1,32 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
-import { getGeolocation } from '../utils/location';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button, Image, StyleSheet } from 'react-native';
 import { insertImage } from '../database/database';
 
-const ImageUploadPage = ({ navigation }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [filePath, setFilePath] = useState('');
-  const [location, setLocation] = useState(null);
+const ImageUploadPage = ({ route, navigation }) => {
+  const { photo } = route.params;
+  const [error, setError] = useState(null);
 
-  const handleUpload = async () => {
+  const handleSave = async () => {
     try {
-      const loc = await getGeolocation();
-      setLocation(loc);
-      insertImage(title, description, filePath, loc.latitude, loc.longitude, new Date().toISOString());
-      navigation.goBack();
-    } catch (error) {
-      console.error('Fetch failed:', error);
+      await insertImage('Title', 'Description', photo.uri, 0, 0, new Date().toISOString());
+      navigation.navigate('Home');
+    } catch (err) {
+      console.error('Error saving image:', err);
+      setError(err);
     }
   };
 
   return (
     <View style={styles.container}>
-      <TextInput placeholder="Title" value={title} onChangeText={setTitle} style={styles.input} />
-      <TextInput placeholder="Description" value={description} onChangeText={setDescription} style={styles.input} />
-      <TextInput placeholder="File Path" value={filePath} onChangeText={setFilePath} style={styles.input} />
-      <Button title="Upload Image" onPress={handleUpload} />
+      {photo ? (
+        <>
+          <Image source={{ uri: photo.uri }} style={styles.image} />
+          <Button title="Save Photo" onPress={handleSave} />
+        </>
+      ) : (
+        <Text>No photo to upload</Text>
+      )}
+      {error && <Text style={styles.errorText}>Error: {error.message}</Text>}
     </View>
   );
 };
@@ -33,14 +34,19 @@ const ImageUploadPage = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 10,
+    backgroundColor: '#f8f8f8',
+  },
+  image: {
+    width: 300,
+    height: 300,
     marginBottom: 20,
-    borderRadius: 5,
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 20,
   },
 });
 

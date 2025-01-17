@@ -6,16 +6,24 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow GalleryApp to access your camera",
+          "microphonePermission": "Allow GalleryApp to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ]
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "We use your camera to take photos."
+      }
     },
     "android": {
+      "permissions": ["CAMERA", "RECORD_AUDIO"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -24,8 +32,13 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-sqlite"
-    ]
+    "extra": {
+      "eas": {
+        "projectId": "your-project-id"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
   }
 }

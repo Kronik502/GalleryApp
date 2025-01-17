@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, StyleSheet, Text } from 'react-native';
+import { View, FlatList, StyleSheet, Text, Button } from 'react-native';
 import { fetchImages } from '../database/database';
 import ImageCard from '../components/ImageCard';
 import ImageModal from '../components/ImageModal';
@@ -10,12 +10,10 @@ const HomePage = ({ navigation }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    try {
-      fetchImages(setImages);
-    } catch (err) {
+    fetchImages(setImages).catch(err => {
       console.error('Error fetching images:', err);
       setError(err);
-    }
+    });
   }, []);
 
   return (
@@ -33,6 +31,11 @@ const HomePage = ({ navigation }) => {
           onClose={() => setSelectedImage(null)}
         />
       )}
+      <Button
+        title="Open Camera"
+        onPress={() => navigation.navigate('Camera')}
+        style={styles.cameraButton}
+      />
     </View>
   );
 };
@@ -42,6 +45,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: '#f8f8f8',
+  },
+  cameraButton: {
+    marginTop: 10,
   },
   errorText: {
     color: 'red',

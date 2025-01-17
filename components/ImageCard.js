@@ -1,26 +1,27 @@
+// src/components/ImageCard.js
 import React from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
-const ImageCard = ({ image, onPress }) => (
-  <TouchableOpacity style={styles.card} onPress={() => onPress(image)}>
-    <Image source={{ uri: image.filePath }} style={styles.image} />
-    <Text style={styles.title}>{image.title}</Text>
-  </TouchableOpacity>
-);
+const ImageCard = ({ image, onPress }) => {
+  return (
+    <TouchableOpacity onPress={() => onPress(image)}>
+      <View style={styles.card}>
+        <Image source={{ uri: image.uri }} style={styles.image} />
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   card: {
-    margin: 10,
+    marginBottom: 10,
     borderRadius: 10,
     overflow: 'hidden',
   },
   image: {
     width: '100%',
     height: 150,
-  },
-  title: {
-    padding: 10,
-    backgroundColor: '#fff',
+    resizeMode: 'cover',
   },
 });
 

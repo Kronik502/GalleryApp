@@ -1,22 +1,27 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { StyleSheet } from 'react-native';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
 const CustomMapView = ({ images }) => (
-  <MapView style={styles.map}>
+  <MapContainer style={styles.map} center={[51.505, -0.09]} zoom={13}>
+    <TileLayer
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    />
     {images.map((image) => (
       <Marker
         key={image.id}
-        coordinate={{ latitude: image.latitude, longitude: image.longitude }}
-        title={image.title}
-      />
+        position={[image.latitude, image.longitude]}
+      >
+        <Popup>{image.title}</Popup>
+      </Marker>
     ))}
-  </MapView>
+  </MapContainer>
 );
 
 const styles = StyleSheet.create({
   map: {
-    ...StyleSheet.absoluteFillObject,
+    height: '100%', 
+    width: '100%'
   },
 });
 
